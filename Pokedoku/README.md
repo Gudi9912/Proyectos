@@ -25,4 +25,4 @@ Version 0.1.1: Los criterios para filtrar pokemons seran pasados por parametro.
 
 Version 0.2.0: Los criterior para filtrar pokemons seran semi-dinamico (Se guardaran en una base de datos de donde se elegiran)
 
-Version 1.0: Completamente dinamico
+Version 1.0.0: Completamente dinamico
