@@ -49,22 +49,46 @@ router.post("/api/Pokedoku", async (req, res) => {
         }
 
         let coincidencias = 0
-        
+        const types = new Set(["FIRE", "WATER", "FLYING", "BUG", "DRAGON", "GRASS", "POISON", "GROUND", "ROCK", "FIGHTING", "PSYCHIC", "NORMAL", "FAIRY", "GHOST", "ELECTRIC", "ICE"])
+        const special = new Set(["LEGENDARY", "FOSSIL", "STARTER"])
+        const evolutionStage = new Set(["INITIAL", "MIDDLE", "FINAL", "SINGLE"])
+        const evolutionMethod = new Set(["TRADE", "ITEM"])
         //Se itera sobre condiciones creando campo y valorCondicion, campo contendra el nombre del campo (ej: FirstType)
         //mientras que valor condicion contendra el valor de ese campo (ej: Fire)
-        for (let [campo, valorCondicion] of Object.entries(condiciones)) {
-            console.log("Pokemon[campo] ", pokemon[campo])
-            console.log("Valor condicion ", valorCondicion)
+        for (let [condicion, valorCondicion] of Object.entries(condiciones)) {
             //Se verifica primero si existe el campo en el pokemon, 
             //luego se verifica que su contenido sea igual al valorCondicion
-            if (pokemon[campo] && pokemon[campo] === valorCondicion){
-                //Si hay coincidencia, sumamos 1
+            //Se verifica si el campo es monotypo, de ser asi se pregunta por el valor del segundo tipo
+            if (valorCondicion === "MONOTYPE" && !pokemon["SecondType"]){
                 coincidencias++
+                continue
+            }
+            //Si es dualtype y tiene un segundo tipo, es coincidencia
+            if (valorCondicion === "DUALTYPE" && pokemon["SecondType"]){
+                coincidencias++
+                continue
+            }
+            if (types.has(valorCondicion) && (pokemon["FirstType"] === valorCondicion || pokemon["SecondType"] === valorCondicion)){
+                coincidencias++
+                continue
+            }
+            if (special.has(valorCondicion) && (pokemon["Special"] === valorCondicion)){
+                coincidencias++
+                continue
+            }
+            if (evolutionStage.has(valorCondicion) && (pokemon["EvolutionStage"] === valorCondicion)){
+                coincidencias++
+                continue
+            }
+            if (evolutionMethod.has(valorCondicion) && (pokemon["EvolutionMethod"] === valorCondicion)){
+                coincidencias++
+                continue
             }
         }
 
         //Si tenemos dos coincidencias significa que el pokemon cumplio ambas condiciones, por lo que es correcto
         if (coincidencias === 2){
+            console.log("El pokemon esta en la casilla correcta")
             return res.json({ message: "El pokemon esta en la casilla correcta"})
         }
         return res.json({ message: "El pokemon no esta en la casilla correcta"})
