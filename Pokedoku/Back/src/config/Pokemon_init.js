@@ -190,6 +190,38 @@ async function CrearBaseSiNoExiste() {
         } else {
             console.log("La tabla Kanto ya existe");
         }
+
+        res = await db.get(
+            "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name = 'Filters' ",
+            []
+        )
+
+        if (res.contar > 0) existe = true
+
+        if(!existe){
+            await db.run(
+                "CREATE TABLE Filters(" +
+                "IdFilter INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "FilterX1 STRING NOT NULL, " +
+                "FilterX2 STRING NOT NULL, " +
+                "FilterX3 STRING NOT NULL, " +
+                "FilterY1 STRING NOT NULL, " +
+                "FilterY2 STRING NOT NULL, " +
+                "FilterY3 STRING NOT NULL); "
+            )
+            console.log("Tabla Filters creada con exito!")
+            await db.run(
+                "INSERT INTO Filters (FilterX1, FilterX2, FilterX3, FilterY1, FilterY2, FilterY3)" +
+                "VALUES " +
+                "('POISON', 'NORMAL', 'ELECTRIC', 'FLYING', 'MONOTYPE', 'FINAL')," +
+                "('DRAGON', 'NORMAL', 'PSYCHIC', 'INITIAL', 'MIDDLE', 'FINAL')," +
+                "('FOSSIL', 'DUALTYPE', 'PSYCHIC', 'INITIAL', 'WATER', 'SINGLE')," +
+                "('GRASS', 'WATER', 'FIRE', 'STARTER', 'FINAL', 'MONOTYPE');" 
+            )
+            console.log("Datos cargados con exito")
+        }else{
+            console.log("La tabla Filters ya existe")
+        }
     } catch (error) {
         console.error("Error al crear la base de datos o acceder a ella:", error);
     }

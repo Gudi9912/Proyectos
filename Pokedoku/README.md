@@ -19,10 +19,10 @@ Mis objetivos con este proyecto son varios:
 
 Dividire el proyecto en versiones que cumplan los siguientes objetivos listados a continuacion:
 
-Version 0.1.0: Los criterios para filtrar pokemons seran estaticos.
+Version 0.1.0: Los criterios para filtrar pokemons seran pasados por parametro.
 
-Version 0.1.1: Los criterios para filtrar pokemons seran pasados por parametro.
+Version 0.1.1: Se agregaron las imagenes de los pokemons.
 
-Version 0.2.0: Los criterior para filtrar pokemons seran semi-dinamico (Se guardaran en una base de datos de donde se elegiran).
+Version 0.2.0: Los criterios para filtrar pokemons seran semi-dinamico (Se guardaran en una base de datos de donde se elegiran).
 
 Version 1.0.0: Completamente dinamico, solo kanto.
