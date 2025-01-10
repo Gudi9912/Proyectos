@@ -41,7 +41,7 @@
   border: none;
 }
 
-/* Botones dentro del tablero */
+/* Estilo para los botones dentro del tablero */
 .puzzle-button {
   width: 100px;
   height: 100px;
@@ -51,6 +51,16 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
+  position: relative; /* Asegúrate de que los elementos dentro del botón se posicionen correctamente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.puzzle-button img {
+  max-width: 80%;  /* Ajusta la imagen al tamaño del botón */
+  max-height: 80%; /* Ajusta la imagen al tamaño del botón */
+  object-fit: contain;  /* Asegura que la imagen se ajuste sin distorsionarse */
 }
 
 /* Efecto hover en los botones */

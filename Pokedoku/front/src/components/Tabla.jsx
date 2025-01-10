@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Puzzle.css';
 import axios from 'axios';
 
@@ -9,10 +9,30 @@ const Puzzle = () => {
   const [pokemonSuggestions, setPokemonSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [resultMessage, setResultMessage] = useState('');
-  const [buttonColors, setButtonColors] = useState({}); // Estado para manejar los colores de los botones
+  const [buttonColors, setButtonColors] = useState({});
+  const [buttonImages, setButtonImages] = useState({});
+  const [columnHeaders, setColumnHeaders] = useState([]);
+  const [rowHeaders, setRowHeaders] = useState([]);
 
-  const columnHeaders = ['MONOTYPE', 'LEGENDARY', 'INITIAL'];
-  const rowHeaders = ['ELECTRIC', 'FIRE', 'ICE'];
+  const inputRef = useRef(null); // Referencia para el input
+
+  // Fetch filters on mount
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/Filters');
+        const filters = response.data;
+
+        // Set column and row headers dynamically from API response
+        setColumnHeaders([filters.FilterX1, filters.FilterX2, filters.FilterX3]);
+        setRowHeaders([filters.FilterY1, filters.FilterY2, filters.FilterY3]);
+      } catch (error) {
+        console.error("Error fetching filters:", error);
+      }
+    };
+
+    fetchFilters();
+  }, []);
 
   const fetchPokemons = async (name) => {
     if (!name) {
@@ -38,6 +58,13 @@ const Puzzle = () => {
 
     return () => clearTimeout(timer);
   }, [pokemonName]);
+
+  useEffect(() => {
+    // Auto-focus al abrir el modal
+    if (modalVisible && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [modalVisible]);
 
   const handleClick = (rowIndex, colIndex) => {
     setSelectedCell({ rowIndex, colIndex });
@@ -69,7 +96,7 @@ const Puzzle = () => {
         condiciones,
       });
 
-      const { message } = response.data;
+      const { message, IdPokedex } = response.data;
       setResultMessage(message);
 
       // Cambiar el color del botón según el mensaje de la respuesta
@@ -78,6 +105,15 @@ const Puzzle = () => {
         [`${selectedCell.rowIndex}-${selectedCell.colIndex}`]:
           message === "El pokemon esta en la casilla correcta" ? 'green' : 'red',
       }));
+
+      if (message === "El pokemon esta en la casilla correcta") {
+        // Guardar la URL de la imagen del Pokémon en el estado
+        const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${IdPokedex}.png`;
+        setButtonImages((prevImages) => ({
+          ...prevImages,
+          [`${selectedCell.rowIndex}-${selectedCell.colIndex}`]: imageUrl,
+        }));
+      }
 
       handleModalClose();
     } catch (error) {
@@ -111,7 +147,15 @@ const Puzzle = () => {
                   backgroundColor: buttonColors[`${rowIndex}-${colIndex}`] || 'white',
                 }}
                 onClick={() => handleClick(rowIndex, colIndex)}
-              ></button>
+              >
+                {buttonImages[`${rowIndex}-${colIndex}`] && (
+                  <img
+                    src={buttonImages[`${rowIndex}-${colIndex}`]}
+                    alt="Pokemon"
+                    className="button-image"
+                  />
+                )}
+              </button>
             ))}
           </React.Fragment>
         ))}
@@ -124,6 +168,7 @@ const Puzzle = () => {
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
+                ref={inputRef} // Referencia para autofocus
                 value={pokemonName}
                 onChange={(e) => setPokemonName(e.target.value)}
                 placeholder="Nombre del Pokémon"
@@ -139,6 +184,11 @@ const Puzzle = () => {
                       onClick={() => handleSuggestionClick(pokemon.Name)}
                     >
                       {pokemon.Name}
+                      <img
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.IdPokedex}.png`}
+                        alt={pokemon.Name}
+                        style={{ width: '30px', marginRight: '10px' }}
+                      />
                     </li>
                   ))}
               </ul>

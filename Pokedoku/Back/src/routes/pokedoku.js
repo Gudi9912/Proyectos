@@ -89,12 +89,37 @@ router.post("/api/Pokedoku", async (req, res) => {
         //Si tenemos dos coincidencias significa que el pokemon cumplio ambas condiciones, por lo que es correcto
         if (coincidencias === 2){
             console.log("El pokemon esta en la casilla correcta")
-            return res.json({ message: "El pokemon esta en la casilla correcta"})
+            return res.json({ message: "El pokemon esta en la casilla correcta",
+                IdPokedex: pokemon.IdPokedex
+            })
         }
         return res.json({ message: "El pokemon no esta en la casilla correcta"})
     }catch(err){
         console.error(err.message)
         return res.status(500).json({ error: "Error al verificar el pokemon"})
+    }
+})
+
+router.get("/api/Filters", async (req, res) => {
+    try{
+        const totalRows = await db.Filters.count()
+        const randomId = Math.floor(Math.random() * totalRows) + 1
+
+        const filters = await db.Filters.findOne({
+            where:{
+                IdFilter : randomId
+            }
+        })
+
+        if (!filters){
+            console.log("Id fuera de indice: " + randomId)
+            return res.status(500).json({error: "Id fuera de indice"})
+        }
+
+        return res.status(200).json(filters)
+    }catch(err){
+        console.error(err.message)
+        return res.status(500).json({error: "Error interno del servidor"})
     }
 })
 

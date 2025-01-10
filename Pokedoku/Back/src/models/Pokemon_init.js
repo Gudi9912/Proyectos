@@ -46,7 +46,47 @@ const Kanto = sequelize.define(
     }
 )
 
+const Filters = sequelize.define(
+    "Filters",
+    {
+        IdFilter: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        FilterX1: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        FilterX2: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        FilterX3: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        FilterY1: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        FilterY2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        FilterY3: {
+            type: DataTypes.STRING,
+            allowNull: true
+        }
+    },
+    {
+        tableName: "Filters",
+        timestamps: false
+    }
+)
+
 module.exports = {
     sequelize,
-    Kanto
+    Kanto,
+    Filters
 }
