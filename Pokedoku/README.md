@@ -25,4 +25,4 @@ Version 0.1.1: Se agregaron las imagenes de los pokemons.
 
 Version 0.2.0: Los criterios para filtrar pokemons seran semi-dinamico (Se guardaran en una base de datos de donde se elegiran).
 
-Version 1.0.0: Completamente dinamico, solo kanto.
+Version 0.2.1: Se agregaran los pokemons de jhoto
