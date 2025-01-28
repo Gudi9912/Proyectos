@@ -1,0 +1,17 @@
+Cambios:
+
+1. Cambiar el nombre de la tabla de pokemons y agregar nuevo campo para las regiones.
+
+2. Preparar el endpoint para usar las regiones como filtro.
+
+3. Hacer la aplicacion responsive.
+
+4. Mejorar el endpoint de busqueda por nombre.
+
+Cosas nuevas:
+
+1. Mejorar la UI.
+
+2. Agregar en el modal los filtros, para una mejor experiencia de usuario.
+
+3. Limpiar el codigo y hacerlo mas ordenado.
