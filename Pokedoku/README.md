@@ -1,7 +1,7 @@
 # Pokedoku
 
 Se intentara hacer un proyecto parecido al de [Pokedoku](https://pokedoku.com/), solo con la primera generacion de
-pokemons a manera de practica.
+pokemons a manera de practica. Proyecto desplegado en [Vercel](https://frontend-plum-one-33.vercel.app/)
 
 ## Objetivos
 
@@ -25,4 +25,6 @@ Version 0.1.1: Se agregaron las imagenes de los pokemons.
 
 Version 0.2.0: Los criterios para filtrar pokemons seran semi-dinamico (Se guardaran en una base de datos de donde se elegiran).
 
-Version 0.2.1: Se agregaran los pokemons de jhoto
+Version 1.0.0: Se agregaran todos los pokemons
+
+version 1.1.0: Se realizaran los cambios del archivo todo

@@ -20,7 +20,7 @@ const Puzzle = () => {
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/Filters');
+        const response = await axios.get('https://pokedokubackend-1wn143ul3-gonzalos-projects-21782806.vercel.app/api/Filters');
         const filters = response.data;
 
         // Set column and row headers dynamically from API response
@@ -42,7 +42,7 @@ const Puzzle = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/api/Pokedoku?Name=${name}`);
+      const response = await axios.get(`https://pokedokubackend-1wn143ul3-gonzalos-projects-21782806.vercel.app/api/Pokedoku?Name=${name}`);
       setPokemonSuggestions(response.data);
     } catch (error) {
       console.error("Error al buscar Pokémon:", error);
@@ -91,7 +91,7 @@ const Puzzle = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:3000/api/Pokedoku', {
+      const response = await axios.post('https://pokedokubackend-1wn143ul3-gonzalos-projects-21782806.vercel.app/api/Pokedoku', {
         Name: pokemonName.toUpperCase(),
         condiciones,
       });
