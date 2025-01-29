@@ -13,17 +13,15 @@ const Puzzle = () => {
   const [buttonImages, setButtonImages] = useState({});
   const [columnHeaders, setColumnHeaders] = useState([]);
   const [rowHeaders, setRowHeaders] = useState([]);
+  const [currentFilters, setCurrentFilters] = useState({ rowFilter: '', colFilter: '' });
 
-  const inputRef = useRef(null); // Referencia para el input
+  const inputRef = useRef(null);
 
-  // Fetch filters on mount
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const response = await axios.get('https://pokedokubackend-1wn143ul3-gonzalos-projects-21782806.vercel.app/api/Filters');
+        const response = await axios.get('http://localhost:3000/api/Filters');
         const filters = response.data;
-
-        // Set column and row headers dynamically from API response
         setColumnHeaders([filters.FilterX1, filters.FilterX2, filters.FilterX3]);
         setRowHeaders([filters.FilterY1, filters.FilterY2, filters.FilterY3]);
       } catch (error) {
@@ -42,8 +40,8 @@ const Puzzle = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`https://pokedokubackend-1wn143ul3-gonzalos-projects-21782806.vercel.app/api/Pokedoku?Name=${name}`);
-      setPokemonSuggestions(response.data);
+      const response = await axios.get(`http://localhost:3000/api/Pokedoku?Name=${name}`);
+      setPokemonSuggestions(response.data); // Usamos la lista tal cual la envía el backend
     } catch (error) {
       console.error("Error al buscar Pokémon:", error);
     } finally {
@@ -60,7 +58,6 @@ const Puzzle = () => {
   }, [pokemonName]);
 
   useEffect(() => {
-    // Auto-focus al abrir el modal
     if (modalVisible && inputRef.current) {
       inputRef.current.focus();
     }
@@ -68,6 +65,7 @@ const Puzzle = () => {
 
   const handleClick = (rowIndex, colIndex) => {
     setSelectedCell({ rowIndex, colIndex });
+    setCurrentFilters({ rowFilter: rowHeaders[rowIndex], colFilter: columnHeaders[colIndex] });
     setModalVisible(true);
   };
 
@@ -76,6 +74,7 @@ const Puzzle = () => {
     setPokemonName('');
     setPokemonSuggestions([]);
     setResultMessage('');
+    setCurrentFilters({ rowFilter: '', colFilter: '' });
   };
 
   const handleSubmit = async (e) => {
@@ -91,7 +90,7 @@ const Puzzle = () => {
     };
 
     try {
-      const response = await axios.post('https://pokedokubackend-1wn143ul3-gonzalos-projects-21782806.vercel.app/api/Pokedoku', {
+      const response = await axios.post('http://localhost:3000/api/Pokedoku', {
         Name: pokemonName.toUpperCase(),
         condiciones,
       });
@@ -99,7 +98,6 @@ const Puzzle = () => {
       const { message, IdPokedex } = response.data;
       setResultMessage(message);
 
-      // Cambiar el color del botón según el mensaje de la respuesta
       setButtonColors((prevColors) => ({
         ...prevColors,
         [`${selectedCell.rowIndex}-${selectedCell.colIndex}`]:
@@ -107,7 +105,6 @@ const Puzzle = () => {
       }));
 
       if (message === "El pokemon esta en la casilla correcta") {
-        // Guardar la URL de la imagen del Pokémon en el estado
         const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${IdPokedex}.png`;
         setButtonImages((prevImages) => ({
           ...prevImages,
@@ -165,10 +162,13 @@ const Puzzle = () => {
         <div className="modal">
           <div className="modal-content">
             <h2>Ingresa el nombre del Pokémon</h2>
+            <p className="filters-applied">
+    Filtros aplicados: <strong>{currentFilters.rowFilter}</strong> | <strong>{currentFilters.colFilter}</strong>
+</p>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
-                ref={inputRef} // Referencia para autofocus
+                ref={inputRef}
                 value={pokemonName}
                 onChange={(e) => setPokemonName(e.target.value)}
                 placeholder="Nombre del Pokémon"
@@ -176,21 +176,19 @@ const Puzzle = () => {
               />
               {loading && <p>Buscando...</p>}
               <ul>
-                {pokemonSuggestions
-                  .filter((pokemon) => pokemon.Name.toLowerCase() !== pokemonName.toLowerCase())
-                  .map((pokemon) => (
-                    <li
-                      key={pokemon.IdPokedex}
-                      onClick={() => handleSuggestionClick(pokemon.Name)}
-                    >
-                      {pokemon.Name}
-                      <img
-                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.IdPokedex}.png`}
-                        alt={pokemon.Name}
-                        style={{ width: '30px', marginRight: '10px' }}
-                      />
-                    </li>
-                  ))}
+                {pokemonSuggestions.map((pokemon) => (
+                  <li
+                    key={pokemon.IdPokedex}
+                    onClick={() => handleSuggestionClick(pokemon.Name)}
+                  >
+                    {pokemon.Name}
+                    <img
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.IdPokedex}.png`}
+                      alt={pokemon.Name}
+                      style={{ width: '30px', marginLeft: '10px' }}
+                    />
+                  </li>
+                ))}
               </ul>
               <div className="button-container">
                 <button type="submit">Aceptar</button>

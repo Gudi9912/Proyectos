@@ -2,24 +2,37 @@
 
 /* Navbar personalizado */
 .custom-navbar {
-    background-color: #2c3e50; /* Fondo más oscuro para el menú */
-    border-bottom: 2px solid #34495e; /* Delgada línea para separar el menú */
+    background: linear-gradient(135deg, #2c3e50, #34495e); /* Gradiente para el fondo */
+    border-bottom: 2px solid #34495e;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para resaltar el menú */
+    padding: 10px 0;
 }
 
 .navbar-brand {
-    font-size: 1.8rem; /* Tamaño de fuente más grande */
-    color: #ecf0f1 !important; /* Texto blanco claro */
+    font-size: 1.8rem;
+    color: #ecf0f1 !important;
     font-weight: bold;
     display: flex;
     align-items: center;
 }
 
-.navbar-brand img {
-    margin-right: 10px; /* Espaciado entre logo y el texto */
+.navbar-brand:hover {
+    color: #3498db !important; /* Color azul brillante al pasar el ratón */
 }
 
-.navbar-brand:hover {
-    color: #3498db !important; /* Color azul brillante cuando se pasa el ratón */
+.navbar-nav .nav-link {
+    color: #ecf0f1 !important; /* Texto blanco claro */
+    font-size: 1.1rem;
+    margin: 0 10px; /* Espaciado entre los elementos del menú */
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #3498db !important; /* Color azul brillante al pasar el ratón */
+}
+
+.navbar-toggler {
+    border: 1px solid #ecf0f1; /* Borde del botón de menú móvil */
 }
 
 .navbar-toggler-icon {
@@ -27,7 +40,33 @@
 }
 
 @media (max-width: 992px) {
+    .navbar-nav {
+        background-color: rgba(44, 62, 80, 0.9); /* Fondo semi-transparente para el menú móvil */
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .navbar-nav .nav-link {
+        margin: 5px 0; /* Espaciado vertical entre los elementos del menú móvil */
+    }
+}
+
+.navbar-nav .nav-link:hover {
+    color: #3498db !important; /* Color azul brillante al pasar el ratón */
+}
+
+@media (max-width: 992px) {
     .custom-navbar {
-        padding: 10px 0; /* Un poco de espacio extra en dispositivos móviles */
+        padding: 10px 0;
+    }
+
+    .navbar-nav {
+        background-color: rgba(44, 62, 80, 0.9); /* Fondo semi-transparente para el menú móvil */
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .navbar-nav .nav-link {
+        margin: 5px 0; /* Espaciado vertical entre los elementos del menú móvil */
     }
 }

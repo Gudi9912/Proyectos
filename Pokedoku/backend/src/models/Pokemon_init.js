@@ -7,8 +7,8 @@ const sequelize = new Sequelize({
    storage: dbPath
 })
 
-const Kanto = sequelize.define(
-    "Kanto",
+const Pokemon = sequelize.define(
+    "Pokemon",
     {
         IdPokedex: {
             type: DataTypes.INTEGER,
@@ -38,10 +38,14 @@ const Kanto = sequelize.define(
         EvolutionMethod: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        Region:{
+            type: DataTypes.STRING,
+            allowNull: false
         }
     },
     {
-        tableName: "Kanto",
+        tableName: "Pokemon",
         timestamps: false
     }
 )
@@ -87,6 +91,6 @@ const Filters = sequelize.define(
 
 module.exports = {
     sequelize,
-    Kanto,
+    Pokemon,
     Filters
 }

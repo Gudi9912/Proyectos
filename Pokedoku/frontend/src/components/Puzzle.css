@@ -5,56 +5,75 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
 }
 
 /* Título */
 .puzzle-container h1 {
   font-size: 2rem;
-  margin-top: 0px; /* Reducir el margen superior */
+  margin-top: 0px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Tablero de Pokedoku (3x3) */
 .puzzle-board {
   display: grid;
-  grid-template-columns: repeat(4, 100px); /* 4 columnas: 1 para los encabezados y 3 para los botones */
+  grid-template-columns: repeat(4, 100px);
   gap: 10px;
   justify-items: center;
-  margin-top: 5px; /* Reducir el margen superior */
+  margin-top: 5px;
   align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Encabezados de las filas y columnas */
+/* Estilos para los encabezados del tablero */
 .puzzle-header {
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  background-color: #ddd;
-  height: 40px;
-  width: 100px;
-  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+  color: #ffffff; /* Texto blanco */
+  padding: 10px;
+  border-radius: 8px; /* Bordes redondeados */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+  margin: 5px; /* Espaciado entre los encabezados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
 }
 
 /* Celda (0,0) transparente */
 .puzzle-header.empty {
-  background-color: transparent;
-  border: none;
+  background-color: transparent; /* Fondo transparente */
+  border: none; /* Sin borde */
+  box-shadow: none; /* Sin sombra */
 }
 
 /* Estilo para los botones dentro del tablero */
+/* Estilos para los botones del tablero */
 .puzzle-button {
   width: 100px;
   height: 100px;
   font-size: 1.2rem;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+  border-radius: 8px; /* Bordes redondeados */
   cursor: pointer;
-  transition: background-color 0.3s;
-  position: relative; /* Asegúrate de que los elementos dentro del botón se posicionen correctamente */
+  transition: background-color 0.3s ease, transform 0.2s ease;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.puzzle-button:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Fondo más claro al pasar el ratón */
+  transform: scale(1.05); /* Efecto de escala al pasar el ratón */
 }
 
 .puzzle-button img {
@@ -75,48 +94,55 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-/* Contenido del modal */
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px; /* Ancho del modal aumentado */
-  max-height: 80vh;
-  overflow-y: auto;
+/* Estilos para el modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-/* Estilo para el título dentro del modal */
+.modal-content {
+  background-color: #2c3e50; /* Fondo oscuro */
+  padding: 20px;
+  border-radius: 8px; /* Bordes redondeados */
+  width: 400px; /* Ancho del modal */
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+}
+
 .modal-content h2 {
   margin-bottom: 20px;
   font-size: 24px;
   text-align: center;
+  color: #ffffff; /* Texto blanco */
 }
 
-/* Estilo para el formulario dentro del modal */
-.modal-content form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Estilo para los campos de entrada dentro del modal */
 .modal-content input[type="text"] {
   padding: 10px;
   margin-bottom: 10px;
   width: 100%;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+  color: #ffffff; /* Texto blanco */
   font-size: 16px;
 }
 
-/* Estilo para la lista de sugerencias de Pokémon dentro del modal */
 .modal-content ul {
   list-style-type: none;
   padding: 0;
@@ -126,50 +152,75 @@
   margin-bottom: 10px;
 }
 
-/* Estilo para cada ítem de la lista de sugerencias */
 .modal-content li {
-  padding: 5px;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
   margin-bottom: 5px;
   cursor: pointer;
+  color: #ffffff; /* Texto blanco */
+  transition: background-color 0.3s ease;
 }
 
 .modal-content li:hover {
-  background-color: #e0e0e0;
+  background-color: rgba(255, 255, 255, 0.2); /* Fondo más claro al pasar el ratón */
 }
 
-/* Estilo para los botones del modal */
 .modal-content .button-container {
   display: flex;
-  justify-content: space-between; /* Los botones estarán uno al lado del otro */
+  justify-content: space-between;
   margin-top: 10px;
 }
 
-/* Botón Aceptar */
-.modal-content button[type="submit"] {
+.modal-content button {
   padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button[type="submit"] {
+  background-color: #4CAF50; /* Verde */
+  color: white;
 }
 
 .modal-content button[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #45a049; /* Verde más oscuro */
 }
 
-/* Botón Cancelar */
 .modal-content button[type="button"] {
-  padding: 10px 20px;
-  background-color: #f44336;
+  background-color: #f44336; /* Rojo */
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .modal-content button[type="button"]:hover {
-  background-color: #e53935;
+  background-color: #e53935; /* Rojo más oscuro */
+}
+
+/* Estilos para los filtros aplicados */
+.filters-applied {
+  font-weight: bold;
+  color: #ffffff; /* Texto blanco */
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+  padding: 10px 15px;
+  border-radius: 8px; /* Bordes redondeados */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+  margin-bottom: 15px; /* Espaciado inferior */
+  text-align: center; /* Centrar el texto */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.filters-applied:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Fondo más claro al pasar el ratón */
+  border-color: rgba(255, 255, 255, 0.3); /* Borde más visible al pasar el ratón */
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Espacio entre los filtros */
+  justify-content: center;
+  margin-bottom: 20px;
 }

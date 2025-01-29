@@ -5,41 +5,89 @@ const { Op } = require("sequelize")
 
 router.use(express.json())
 
-router.get("/api/", async (req, res) => {
-    try {
-        const pokemons = await db.Kanto.findAll()
-        return res.status(200).json(pokemons)
-    }catch(err){
-        console.log(err)
-    }
-})
-// Endpoint mejorado para obtener Pokémon
+//Consultar un pokemon por su nombre
+
 router.get("/api/Pokedoku", async (req, res) => {
     try {
         const { Name } = req.query;
 
-        // Construye dinámicamente los criterios de búsqueda
-        const whereClause = Name
-            ? { Name: { [Op.like]: `%${Name}%` } }
-            : {};
+        if (!Name) {
+            return res.status(400).json({ error: "El parámetro 'Name' es requerido" });
+        }
 
-        // Consulta a la base de datos
-        const pokemons = await db.Kanto.findAll({ where: whereClause });
+        // Normalizar el término de búsqueda
+        const searchTerm = Name.toLowerCase().replace(/[^a-z]/g, '');
+
+        // Obtener todos los Pokémon
+        const allPokemons = await db.Pokemon.findAll();
+
+        // Asignar un puntaje a cada Pokémon basado en la coincidencia
+        const scoredPokemons = allPokemons.map(pokemon => {
+            const pokemonName = pokemon.Name.toLowerCase().replace(/[^a-z]/g, '');
+            const score = calculateMatchScore(pokemonName, searchTerm);
+            return { ...pokemon.toJSON(), score };
+        });
+
+        // Filtrar Pokémon que contengan todas las letras del término de búsqueda
+        const filteredPokemons = scoredPokemons.filter(pokemon => 
+            containsAllLetters(pokemon.Name.toLowerCase(), searchTerm)
+        );
+
+        // Ordenar por puntaje (mayor puntaje primero)
+        filteredPokemons.sort((a, b) => b.score - a.score);
 
         // Respuesta exitosa
-        return res.status(200).json(pokemons);
+        return res.status(200).json(filteredPokemons);
     } catch (err) {
         console.error("Error al obtener los Pokémon:", err.message);
         return res.status(500).json({ error: "Error al obtener los Pokémon" });
     }
 });
 
+// Función para verificar si un nombre contiene todas las letras del término de búsqueda
+function containsAllLetters(pokemonName, searchTerm) {
+    const pokemonLetters = pokemonName.split('');
+    const searchLetters = searchTerm.split('');
+    return searchLetters.every(letter => pokemonLetters.includes(letter));
+}
+
+// Función para calcular el puntaje de coincidencia
+function calculateMatchScore(pokemonName, searchTerm) {
+    let score = 0;
+
+    // Priorizar coincidencias exactas
+    if (pokemonName === searchTerm) {
+        score += 200; // Máxima prioridad si el nombre es exactamente igual
+    }
+    // Priorizar coincidencias exactas o subcadenas en el mismo orden
+    if (pokemonName.includes(searchTerm)) {
+        score += 100; // Máxima prioridad si el término está en el mismo orden
+    }
+
+    // Priorizar letras en el mismo orden, aunque no sean consecutivas
+    let searchIndex = 0;
+    for (let i = 0; i < pokemonName.length; i++) {
+        if (pokemonName[i] === searchTerm[searchIndex]) {
+            score += 10; // Aumentar el puntaje por cada letra en el orden correcto
+            searchIndex++;
+        }
+    }
+
+    // Priorizar Pokémon que contengan todas las letras del término de búsqueda
+    if (containsAllLetters(pokemonName, searchTerm)) {
+        score += 5;
+    }
+
+    return score;
+}
+
+//Consultar si un pokemon cumple con las condiciones dadas
 router.post("/api/Pokedoku", async (req, res) => {
-    const { Name, condiciones} = req.body //Condiciones es un objeto
+    const { Name, condiciones} = req.body 
 
     try {
         //Se busca el pokemon en la base de datos
-        const pokemon = await db.Kanto.findOne({
+        const pokemon = await db.Pokemon.findOne({
             where: {Name: Name}
         })
 
@@ -50,9 +98,9 @@ router.post("/api/Pokedoku", async (req, res) => {
 
         let coincidencias = 0
         const types = new Set(["FIRE", "WATER", "FLYING", "BUG", "DRAGON", "GRASS", "POISON", "GROUND", "ROCK", "FIGHTING", "PSYCHIC", "NORMAL", "FAIRY", "GHOST", "ELECTRIC", "ICE"])
-        const special = new Set(["LEGENDARY", "FOSSIL", "STARTER"])
+        const special = new Set(["LEGENDARY", "FOSSIL", "STARTER", "ULTRA BEAST", "PARADOX", "MYTHICAL"])
         const evolutionStage = new Set(["INITIAL", "MIDDLE", "FINAL", "SINGLE"])
-        const evolutionMethod = new Set(["TRADE", "ITEM"])
+        const evolutionMethod = new Set(["TRADE", "ITEM", "FRIENDSHIP"])
         //Se itera sobre condiciones creando campo y valorCondicion, campo contendra el nombre del campo (ej: FirstType)
         //mientras que valor condicion contendra el valor de ese campo (ej: Fire)
         for (let [condicion, valorCondicion] of Object.entries(condiciones)) {
@@ -100,6 +148,8 @@ router.post("/api/Pokedoku", async (req, res) => {
     }
 })
 
+
+//Se obtiene un conjunto de filtros de la base de datos
 router.get("/api/Filters", async (req, res) => {
     try{
         const totalRows = await db.Filters.count()
