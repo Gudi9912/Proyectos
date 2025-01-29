@@ -1,7 +1,7 @@
 # Pokedoku
 
 Se intentara hacer un proyecto parecido al de [Pokedoku](https://pokedoku.com/), solo con la primera generacion de
-pokemons a manera de practica. Proyecto desplegado en [Vercel](https://frontend-plum-one-33.vercel.app/)
+pokemons a manera de practica. Proyecto desplegado en [Vercel](https://pokedoku-front.vercel.app/)
 
 ## Objetivos
 
