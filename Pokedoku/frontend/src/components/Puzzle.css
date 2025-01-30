@@ -234,7 +234,7 @@
   }
 
   .puzzle-board {
-    gap: 5px; /* Espacio entre los botones para móviles */
+    gap: 3px; /* Espacio entre los botones para móviles */
   }
 
   .puzzle-container h1 {
