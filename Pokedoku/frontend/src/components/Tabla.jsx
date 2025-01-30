@@ -20,7 +20,7 @@ const Puzzle = () => {
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/Filters');
+        const response = await axios.get('https://backend-ruddy-psi-65.vercel.app/api/Filters');
         const filters = response.data;
         setColumnHeaders([filters.FilterX1, filters.FilterX2, filters.FilterX3]);
         setRowHeaders([filters.FilterY1, filters.FilterY2, filters.FilterY3]);
@@ -40,7 +40,7 @@ const Puzzle = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/api/Pokedoku?Name=${name}`);
+      const response = await axios.get(`https://backend-ruddy-psi-65.vercel.app/api/Pokedoku?Name=${name}`);
       setPokemonSuggestions(response.data); // Usamos la lista tal cual la envía el backend
     } catch (error) {
       console.error("Error al buscar Pokémon:", error);
@@ -90,7 +90,7 @@ const Puzzle = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:3000/api/Pokedoku', {
+      const response = await axios.post('https://backend-ruddy-psi-65.vercel.app/api/Pokedoku', {
         Name: pokemonName.toUpperCase(),
         condiciones,
       });
