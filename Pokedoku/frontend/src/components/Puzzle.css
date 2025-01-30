@@ -5,15 +5,15 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 20px; /* Aumentar el padding en pantallas grandes */
+  padding: 10px; /* Reducir el padding en móviles */
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
 }
 
 /* Título */
 .puzzle-container h1 {
-  font-size: 2rem; /* Tamaño del título en pantallas grandes */
-  margin-top: 0;
+  font-size: 1.5rem; /* Reducir el tamaño del título en móviles */
+  margin-top: 0px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -21,15 +21,15 @@
 .puzzle-board {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Siempre 4 columnas */
-  gap: 10px; /* Aumentar el espacio entre los botones en pantallas grandes */
+  gap: 5px; /* Reducir el espacio entre los botones */
   justify-items: center;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 20px; /* Aumentar el padding en pantallas grandes */
+  padding: 10px; /* Reducir el padding en móviles */
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   max-width: 100%; /* Asegura que no se desborde en pantallas pequeñas */
-  margin: 10px auto 0; /* Reducir el margen superior */
+  margin: 0 auto; /* Centra el tablero */
   overflow: auto; /* Evita desbordamientos */
 }
 
@@ -41,12 +41,12 @@
   font-weight: bold;
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  padding: 12px; /* Aumentar el padding en pantallas grandes */
+  padding: 8px; /* Reducir el padding en móviles */
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  margin: 5px; /* Aumentar el margen en pantallas grandes */
+  margin: 3px; /* Reducir el margen en móviles */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-size: 1rem; /* Aumentar el tamaño de la fuente en pantallas grandes */
+  font-size: 0.9rem; /* Reducir el tamaño de la fuente en móviles */
 }
 
 /* Celda (0,0) transparente */
@@ -58,9 +58,9 @@
 
 /* Estilo para los botones dentro del tablero */
 .puzzle-button {
-  width: 100px; /* Tamaño base para pantallas grandes */
-  height: 100px;
-  font-size: 1rem; /* Tamaño de la fuente en pantallas grandes */
+  width: 60px; /* Tamaño base para móviles */
+  height: 60px;
+  font-size: 0.8rem; /* Reducir el tamaño de la fuente en móviles */
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -99,31 +99,31 @@
 
 .modal-content {
   background-color: #2c3e50;
-  padding: 20px; /* Aumentar el padding en pantallas grandes */
+  padding: 15px; /* Reducir el padding en móviles */
   border-radius: 8px;
   width: 90%; /* Ocupa el 90% del ancho en pantallas pequeñas */
-  max-width: 500px; /* Aumentar el ancho máximo en pantallas grandes */
+  max-width: 400px; /* Ancho máximo en pantallas grandes */
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .modal-content h2 {
-  margin-bottom: 20px; /* Aumentar el margen en pantallas grandes */
-  font-size: 1.5rem; /* Aumentar el tamaño del título en pantallas grandes */
+  margin-bottom: 15px; /* Reducir el margen en móviles */
+  font-size: 1.2rem; /* Reducir el tamaño del título en móviles */
   text-align: center;
   color: #ffffff;
 }
 
 .modal-content input[type="text"] {
-  padding: 10px; /* Aumentar el padding en pantallas grandes */
-  margin-bottom: 10px; /* Aumentar el margen en pantallas grandes */
+  padding: 8px; /* Reducir el padding en móviles */
+  margin-bottom: 8px; /* Reducir el margen en móviles */
   width: 100%;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  font-size: 1rem; /* Aumentar el tamaño de la fuente en pantallas grandes */
+  font-size: 0.9rem; /* Reducir el tamaño de la fuente en móviles */
 }
 
 .modal-content ul {
@@ -132,14 +132,14 @@
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  margin-bottom: 10px; /* Aumentar el margen en pantallas grandes */
+  margin-bottom: 8px; /* Reducir el margen en móviles */
 }
 
 .modal-content li {
-  padding: 10px; /* Aumentar el padding en pantallas grandes */
+  padding: 8px; /* Reducir el padding en móviles */
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 5px; /* Aumentar el margen en pantallas grandes */
+  margin-bottom: 4px; /* Reducir el margen en móviles */
   cursor: pointer;
   color: #ffffff;
   transition: background-color 0.3s ease;
@@ -152,15 +152,15 @@
 .modal-content .button-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px; /* Aumentar el margen en pantallas grandes */
+  margin-top: 8px; /* Reducir el margen en móviles */
 }
 
 .modal-content button {
-  padding: 10px 20px; /* Aumentar el padding en pantallas grandes */
+  padding: 8px 16px; /* Reducir el padding en móviles */
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem; /* Aumentar el tamaño de la fuente en pantallas grandes */
+  font-size: 0.9rem; /* Reducir el tamaño de la fuente en móviles */
   transition: background-color 0.3s ease;
 }
 
@@ -187,13 +187,13 @@
   font-weight: bold;
   color: #ffffff;
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 10px 15px; /* Aumentar el padding en pantallas grandes */
+  padding: 8px 12px; /* Reducir el padding en móviles */
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 15px; /* Aumentar el margen en pantallas grandes */
+  margin-bottom: 10px; /* Reducir el margen en móviles */
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-size: 1rem; /* Aumentar el tamaño de la fuente en pantallas grandes */
+  font-size: 0.9rem; /* Reducir el tamaño de la fuente en móviles */
 }
 
 .filters-applied:hover {
@@ -204,40 +204,24 @@
 .filters-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* Aumentar el espacio entre los filtros en pantallas grandes */
+  gap: 8px; /* Reducir el espacio entre los filtros */
   justify-content: center;
-  margin-bottom: 20px; /* Aumentar el margen en pantallas grandes */
+  margin-bottom: 15px; /* Reducir el margen en móviles */
 }
 
 /* Ajustes para pantallas pequeñas */
-@media (max-width: 768px) {
-  .puzzle-button {
-    width: 80px; /* Tamaño para tablets */
-    height: 80px;
-    font-size: 0.9rem; /* Tamaño de la fuente para tablets */
-  }
-
-  .puzzle-board {
-    gap: 8px; /* Espacio entre los botones para tablets */
-  }
-
-  .puzzle-container h1 {
-    font-size: 1.8rem; /* Tamaño del título para tablets */
-  }
-}
-
 @media (max-width: 480px) {
   .puzzle-button {
-    width: 60px; /* Tamaño para móviles */
-    height: 60px;
-    font-size: 0.8rem; /* Tamaño de la fuente para móviles */
+    width: 50px; /* Reducir aún más el tamaño de los botones en móviles */
+    height: 50px;
+    font-size: 0.7rem; /* Reducir el tamaño de la fuente en móviles */
   }
 
   .puzzle-board {
-    gap: 3px; /* Espacio entre los botones para móviles */
+    gap: 4px; /* Reducir aún más el espacio entre los botones */
   }
 
   .puzzle-container h1 {
-    font-size: 1.5rem; /* Tamaño del título para móviles */
+    font-size: 1.2rem; /* Reducir aún más el tamaño del título en móviles */
   }
 }
