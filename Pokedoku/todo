@@ -4,9 +4,13 @@ Cambios:
 
 2. Preparar el endpoint para usar las regiones como filtro. (done)
 
-3. Hacer la aplicacion responsive.
+3. Hacer la aplicacion responsive. (done)
 
 4. Mejorar el sistema de busqueda del modal. (done)
+
+5. Limpiar el codigo y hacerlo mas ordenado. (done)
+
+6. Mejorar el tamaño en PC sin afectar el de mobil
 
 Cosas nuevas:
 
@@ -14,4 +18,10 @@ Cosas nuevas:
 
 2. Agregar en el modal los filtros, para una mejor experiencia de usuario. (done)
 
-3. Limpiar el codigo y hacerlo mas ordenado.
+3. Automatizar el deploy de vercel (done)
+
+3. Agregar un boton instrucciones que abra un modal explicando como jugar (done)
+
+4. Agregar footer con informacion de contacto (done)
+
+5. Aprender sobre posicionamiento web y seguridad web e implementarlo
