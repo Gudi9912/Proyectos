@@ -1,0 +1,43 @@
+/* Estilos para el footer */
+.footer {
+  background-color: #2c3e50; /* Fondo oscuro */
+  color: #ffffff; /* Texto blanco */
+  padding: 20px 0; /* Espaciado interno */
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Borde superior sutil */
+  margin-top: auto; /* Empuja el footer hacia la parte inferior */
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between; /* Espacio entre el texto y los logos */
+  align-items: center; /* Centrar verticalmente */
+  max-width: 1200px; /* Ancho máximo del contenido */
+  margin: 0 auto; /* Centrar el contenido */
+  padding: 0 20px; /* Espaciado lateral */
+}
+
+.footer-text {
+  margin: 0; /* Eliminar margen predeterminado */
+  font-size: 0.9rem; /* Tamaño de la fuente */
+}
+
+/* Contenedor de logos */
+.logo-container {
+  display: flex;
+  gap: 15px; /* Espacio entre los logos */
+}
+
+/* Estilos para los logos */
+.logo-link {
+  display: inline-block;
+  transition: transform 0.2s ease; /* Efecto hover */
+}
+
+.logo-link:hover {
+  transform: scale(1.1); /* Escalar ligeramente al pasar el ratón */
+}
+
+.logo {
+  width: 24px; /* Tamaño del logo */
+  height: 24px;
+}

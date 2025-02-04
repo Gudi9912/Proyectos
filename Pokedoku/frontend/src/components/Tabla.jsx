@@ -1,74 +1,75 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Puzzle.css';
-import axios from 'axios';
+import { fetchFilters, fetchPokemons, verifyPokemon } from '../services/puzzle.service.js';
+import Modal from './ModalPuzzle';
 
 const Puzzle = () => {
+  // Estados para controlar la visibilidad del modal y la celda seleccionada
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCell, setSelectedCell] = useState(null);
+
+  // Estados para manejar el nombre del Pokémon, sugerencias y carga
   const [pokemonName, setPokemonName] = useState('');
   const [pokemonSuggestions, setPokemonSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Estados para mensajes de resultado, colores de botones e imágenes
   const [resultMessage, setResultMessage] = useState('');
   const [buttonColors, setButtonColors] = useState({});
   const [buttonImages, setButtonImages] = useState({});
+
+  // Estados para los encabezados de columnas y filas
   const [columnHeaders, setColumnHeaders] = useState([]);
   const [rowHeaders, setRowHeaders] = useState([]);
+
+  // Estado para los filtros actuales
   const [currentFilters, setCurrentFilters] = useState({ rowFilter: '', colFilter: '' });
 
+  // Referencia para el input del modal
   const inputRef = useRef(null);
 
+  // Efecto para cargar los filtros al montar el componente
   useEffect(() => {
-    const fetchFilters = async () => {
-      try {
-        const response = await axios.get('https://backend-ruddy-psi-65.vercel.app/api/Filters');
-        const filters = response.data;
-        setColumnHeaders([filters.FilterX1, filters.FilterX2, filters.FilterX3]);
-        setRowHeaders([filters.FilterY1, filters.FilterY2, filters.FilterY3]);
-      } catch (error) {
-        console.error("Error fetching filters:", error);
-      }
+    const loadFilters = async () => {
+      const filters = await fetchFilters();
+      setColumnHeaders([filters.FilterX1, filters.FilterX2, filters.FilterX3]);
+      setRowHeaders([filters.FilterY1, filters.FilterY2, filters.FilterY3]);
     };
-
-    fetchFilters();
+    loadFilters();
   }, []);
 
-  const fetchPokemons = async (name) => {
-    if (!name) {
-      setPokemonSuggestions([]);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.get(`https://backend-ruddy-psi-65.vercel.app/api/Pokedoku?Name=${name}`);
-      setPokemonSuggestions(response.data); // Usamos la lista tal cual la envía el backend
-    } catch (error) {
-      console.error("Error al buscar Pokémon:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Efecto para buscar Pokémon después de un retraso al escribir en el input
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchPokemons(pokemonName);
+      if (pokemonName) {
+        setLoading(true);
+        fetchPokemons(pokemonName).then((data) => {
+          setPokemonSuggestions(data);
+          setLoading(false);
+        });
+      } else {
+        setPokemonSuggestions([]);
+      }
     }, 500);
 
     return () => clearTimeout(timer);
   }, [pokemonName]);
 
+  // Efecto para enfocar el input cuando el modal se abre
   useEffect(() => {
     if (modalVisible && inputRef.current) {
       inputRef.current.focus();
     }
   }, [modalVisible]);
 
+  // Función para manejar el clic en una celda del tablero
   const handleClick = (rowIndex, colIndex) => {
     setSelectedCell({ rowIndex, colIndex });
     setCurrentFilters({ rowFilter: rowHeaders[rowIndex], colFilter: columnHeaders[colIndex] });
     setModalVisible(true);
   };
 
+  // Función para cerrar el modal y resetear estados
   const handleModalClose = () => {
     setModalVisible(false);
     setPokemonName('');
@@ -77,12 +78,10 @@ const Puzzle = () => {
     setCurrentFilters({ rowFilter: '', colFilter: '' });
   };
 
+  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!selectedCell || !pokemonName) {
-      return;
-    }
+    if (!selectedCell || !pokemonName) return;
 
     const condiciones = {
       Condicion1: rowHeaders[selectedCell.rowIndex],
@@ -90,20 +89,18 @@ const Puzzle = () => {
     };
 
     try {
-      const response = await axios.post('https://backend-ruddy-psi-65.vercel.app/api/Pokedoku', {
-        Name: pokemonName.toUpperCase(),
-        condiciones,
-      });
-
-      const { message, IdPokedex } = response.data;
+      // Se hace la conexión con el back para comprobar si el Pokémon es correcto
+      const { message, IdPokedex } = await verifyPokemon(pokemonName, condiciones);
       setResultMessage(message);
 
+      // Se cambia el color de la casilla a rojo o verde, según sea correcto o no
       setButtonColors((prevColors) => ({
         ...prevColors,
         [`${selectedCell.rowIndex}-${selectedCell.colIndex}`]:
           message === "El pokemon esta en la casilla correcta" ? 'green' : 'red',
       }));
 
+      // Se busca la imagen del Pokémon, según su id, en un repositorio de GitHub
       if (message === "El pokemon esta en la casilla correcta") {
         const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${IdPokedex}.png`;
         setButtonImages((prevImages) => ({
@@ -119,6 +116,7 @@ const Puzzle = () => {
     }
   };
 
+  // Función para manejar el clic en una sugerencia de Pokémon
   const handleSuggestionClick = (name) => {
     setPokemonName(name);
     setPokemonSuggestions([]);
@@ -127,12 +125,12 @@ const Puzzle = () => {
   return (
     <div className="puzzle-container">
       <h1>Puzzle de Hoy</h1>
+      {/* Se crea el tablero con los botones y los filtros */}
       <div className="puzzle-board">
         <div className="puzzle-header empty"></div>
         {columnHeaders.map((header, colIndex) => (
           <div key={colIndex} className="puzzle-header">{header}</div>
         ))}
-
         {rowHeaders.map((rowHeader, rowIndex) => (
           <React.Fragment key={rowIndex}>
             <div className="puzzle-header">{rowHeader}</div>
@@ -157,48 +155,20 @@ const Puzzle = () => {
           </React.Fragment>
         ))}
       </div>
-
-      {modalVisible && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Ingresa el nombre del Pokémon</h2>
-            <p className="filters-applied">
-    Filtros aplicados: <strong>{currentFilters.rowFilter}</strong> | <strong>{currentFilters.colFilter}</strong>
-</p>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                ref={inputRef}
-                value={pokemonName}
-                onChange={(e) => setPokemonName(e.target.value)}
-                placeholder="Nombre del Pokémon"
-                required
-              />
-              {loading && <p>Buscando...</p>}
-              <ul>
-                {pokemonSuggestions.map((pokemon) => (
-                  <li
-                    key={pokemon.IdPokedex}
-                    onClick={() => handleSuggestionClick(pokemon.Name)}
-                  >
-                    {pokemon.Name}
-                    <img
-                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.IdPokedex}.png`}
-                      alt={pokemon.Name}
-                      style={{ width: '30px', marginLeft: '10px' }}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <div className="button-container">
-                <button type="submit">Aceptar</button>
-                <button type="button" onClick={handleModalClose}>Cancelar</button>
-              </div>
-            </form>
-            {resultMessage && <p>{resultMessage}</p>}
-          </div>
-        </div>
-      )}
+      {/* Modal para escribir el nombre del Pokémon */}
+      <Modal
+        modalVisible={modalVisible}
+        handleModalClose={handleModalClose}
+        pokemonName={pokemonName}
+        setPokemonName={setPokemonName}
+        loading={loading}
+        pokemonSuggestions={pokemonSuggestions}
+        handleSuggestionClick={handleSuggestionClick}
+        handleSubmit={handleSubmit}
+        currentFilters={currentFilters}
+        resultMessage={resultMessage}
+        inputRef={inputRef}
+      />
     </div>
   );
 };
