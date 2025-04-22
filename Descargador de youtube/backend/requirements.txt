@@ -1,0 +1,14 @@
+# Core FastAPI
+fastapi==0.115.12  # Versión final estable
+uvicorn==0.30.0  # Soporte para HTTP/3
+
+# Procesamiento Multimedia (2025)
+yt-dlp==2025.3.31  # Soporte para últimos cambios de YouTube
+ffmpeg-python==0.2.0  # Nuevas funciones de procesamiento
+
+# Utilidades Esenciales
+python-dotenv==1.1.0  # Soporte para .env.vault
+
+# Producción
+gunicorn==23.0.0  # Soporte para QUIC
+hypercorn==0.17.3  # Alternativa con HTTP/3
