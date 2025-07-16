@@ -1,0 +1,19 @@
+Crear entorno virtual
+
+python -m venv nombre_del_venv
+
+activar el entorno virtual en windows
+
+nombre_del_venv\Scripts\activate
+
+Instalar paquetes de requirements.txt
+
+pip install -r requirements.txt
+
+Desactivar el venv
+
+deactivate
+
+Seleccionar el interprete de python
+
+ctrl + shift + p > python: select interpreter > enter interpreter path > venv > scripts > python.exe

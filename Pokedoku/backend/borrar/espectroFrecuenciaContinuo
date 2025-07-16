@@ -1,0 +1,14 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generamos un rango de frecuencias y amplitudes suaves
+frequencies_continuous = np.linspace(0, 1000, 500)
+amplitudes_continuous = np.exp(-frequencies_continuous/200)  # Atenuación suave
+
+# Graficar espectro continuo
+plt.plot(frequencies_continuous, amplitudes_continuous, color='blue')
+plt.xlabel('Frecuencia (Hz)')
+plt.ylabel('Amplitud (V)')
+plt.title('Espectro Continuo de una Señal No Periódica')
+plt.grid(True)
+plt.show()
