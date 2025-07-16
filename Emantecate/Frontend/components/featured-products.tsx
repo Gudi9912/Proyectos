@@ -14,6 +14,8 @@ interface Props {
   products: Product[]
 }
 
+const BASE_URL = "http://localhost:3001/uploads/"
+
 export default function FeaturedProducts({ products }: Props) {
   const [loading, setLoading] = useState<number | null>(null)
   const { addToCart } = useCart()
@@ -25,7 +27,7 @@ export default function FeaturedProducts({ products }: Props) {
         id: product.IDProducto,
         name: product.Nombre,
         price: product.Precio,
-        image: product.Imagen || "/placeholder.svg"
+        image: BASE_URL + product.Imagen || "/placeholder.svg"
       },
       1,
       product.Stock
@@ -39,7 +41,13 @@ export default function FeaturedProducts({ products }: Props) {
       {products.map(product => (
         <Card key={product.IDProducto} className="overflow-hidden">
           <div className="relative h-48 w-full">
-            <Image src={product.Imagen || "/placeholder.svg"} alt={product.Nombre} fill className="object-cover" />
+            <Image 
+              src={product.Imagen ? BASE_URL + product.Imagen : "/placeholder.png"} 
+              alt={product.Nombre} 
+              fill 
+              className="object-cover rounded-t-md"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
           </div>
           <CardContent className="p-4">
             <Link href={`/products/${product.IDProducto}`}>

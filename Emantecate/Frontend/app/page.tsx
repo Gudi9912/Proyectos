@@ -41,7 +41,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/placeholder.svg?height=40&width=40" alt="Logo" width={40} height={40} className="rounded-full" />
+            <Image src="/logo.jfif" alt="Logo" width={40} height={40} className="rounded-full" />
             <span className="font-bold text-xl hidden sm:inline-block">Emantecate</span>
           </Link>
           <div className="flex items-center gap-4">
@@ -57,8 +57,8 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative">
-        <div className="relative h-[60vh] w-full overflow-hidden">
-          <Image src="/placeholder.svg?height=800&width=1200" alt="Productos de panadería frescos" fill className="object-cover" priority />
+        <div className="relative w-full aspect-[3/1] overflow-hidden">
+          <Image src="/logo.jfif" alt="Productos de panadería frescos" fill className="object-cover" priority />
           <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white p-4">
             <h1 className="text-3xl md:text-5xl font-bold text-center mb-4">Emantecate</h1>
             <p className="text-lg md:text-xl text-center mb-6 max-w-md">Panes y pasteles artesanales horneados con amor cada día</p>

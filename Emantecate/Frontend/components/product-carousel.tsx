@@ -14,6 +14,8 @@ interface Props {
   products: Product[]
 }
 
+const BASE_URL = "http://localhost:3001/uploads/"
+
 export default function ProductCarousel({ products }: Props) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const { addToCart } = useCart()
@@ -27,7 +29,7 @@ export default function ProductCarousel({ products }: Props) {
         id: product.IDProducto,
         name: product.Nombre,
         price: product.Precio,
-        image: product.Imagen || "/placeholder.svg"
+        image: BASE_URL + product.Imagen
       },
       1,
       product.Stock
@@ -53,7 +55,13 @@ export default function ProductCarousel({ products }: Props) {
           <div key={product.IDProducto} className="min-w-[250px] max-w-[250px] snap-start">
             <Card className="h-full">
               <div className="relative h-48 w-full">
-                <Image src={product.Imagen || "/placeholder.svg"} alt={product.Nombre} fill className="object-cover" />
+                <Image 
+                  src={product.Imagen ? BASE_URL + product.Imagen : "/placeholder.png"} 
+                  alt={product.Nombre} 
+                  fill 
+                  className="object-cover rounded-t-md"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               </div>
               <CardContent className="p-4">
                 <Link href={`/products/${product.IDProducto}`}>

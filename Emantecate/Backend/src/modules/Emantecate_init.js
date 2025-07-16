@@ -85,11 +85,7 @@ const Productos = sequelize.define(
       Imagen: {
         type: DataTypes.STRING(255), 
         allowNull: false,
-        validate: {
-          isUrl: {
-            msg: 'La imagen debe ser una URL válida'
-          }
-        }
+
       },
       Stock: {
         type: DataTypes.INTEGER,

@@ -3,40 +3,29 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Filter, ShoppingBag, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
 import { toast } from "@/components/ui/use-toast"
 import MobileNav from "@/components/mobile-nav"
 import UserMenu from "@/components/user-menu"
 import ProductAdminCard from "@/components/product-admin-card"
 import { useAuth } from "@/contexts/auth-context"
 import { useCart } from "@/contexts/cart-context"
-import { ProductService } from "@/services/product.services"
+import { ProductService, Product } from "@/services/product.services"
 
-type Product = {
-  IDProducto: number
-  Nombre: string
-  Descripcion: string
-  Precio: number
-  Imagen: string
-  Stock: number
-  Activo: boolean
-  Destacado: boolean
-  IDRelleno: number | null
-  Relleno?: {
-    Nombre: string
-  }
-}
+const BASE_URL = "http://localhost:3001/uploads/"
 
 export default function ProductsPage() {
-  const { user } = useAuth()
+  const router = useRouter()
+  const { isAdmin, logout } = useAuth()
   const { addToCart, cartItems } = useCart()
-
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -127,8 +116,8 @@ export default function ProductsPage() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/placeholder.svg" alt="Logo" width={40} height={40} className="rounded-full" />
-            <span className="font-bold text-xl hidden sm:inline-block">Dulce Pan</span>
+            <Image src="/logo.jfif" alt="Logo" width={40} height={40} className="rounded-full" />
+            <span className="font-bold text-xl hidden sm:inline-block">Emantecate</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/cart" className="relative">
@@ -137,7 +126,21 @@ export default function ProductsPage() {
                 {cartItems.length}
               </span>
             </Link>
-            <div className="hidden md:block"><UserMenu /></div>
+            <div className="hidden md:flex items-center gap-2">
+              <UserMenu />
+              {isAdmin && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    logout()
+                    router.push("/login")
+                  }}
+                >
+                  Cerrar sesión
+                </Button>
+              )}
+            </div>
             <MobileNav />
           </div>
         </div>
@@ -146,12 +149,132 @@ export default function ProductsPage() {
       <div className="container py-8 px-4 md:px-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl md:text-3xl font-bold">Nuestros Productos</h1>
-          {user?.role === "admin" && <Badge variant="secondary">Modo Administrador</Badge>}
+            <div className="flex items-center gap-4">
+              {isAdmin && (
+                <>
+                  <Badge variant="secondary">Modo Administrador</Badge>
+                  <div className="flex gap-2">
+                    <Button asChild variant="default" size="sm">
+                      <Link href="/products/create">Registrar producto</Link>
+                    </Button>
+                    <Button asChild variant="secondary" size="sm">
+                      <Link href="/rellenos/create">Registrar relleno</Link>
+                    </Button>
+                  </div>
+                </>
+              )}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filtros
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                        <SheetHeader>
+                          <SheetTitle>Filtrar productos</SheetTitle>
+                        </SheetHeader>
+                        <div className="space-y-6 py-4">
+                          <div className="space-y-2">
+                            <Label>Mostrar activos</Label>
+                            <Switch
+                              checked={filters.active}
+                              onCheckedChange={(checked) =>
+                                setFilters(prev => ({ ...prev, active: checked }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Stock</Label>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  id="in-stock"
+                                  checked={filters.stockStatus === "inStock"}
+                                  onCheckedChange={() =>
+                                    setFilters(prev => ({ ...prev, stockStatus: "inStock" }))
+                                  }
+                                />
+                                <Label htmlFor="in-stock">En stock</Label>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  id="low-stock"
+                                  checked={filters.stockStatus === "lowStock"}
+                                  onCheckedChange={() =>
+                                    setFilters(prev => ({ ...prev, stockStatus: "lowStock" }))
+                                  }
+                                />
+                                <Label htmlFor="low-stock">Poco stock</Label>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  id="out-of-stock"
+                                  checked={filters.stockStatus === "outOfStock"}
+                                  onCheckedChange={() =>
+                                    setFilters(prev => ({ ...prev, stockStatus: "outOfStock" }))
+                                  }
+                                />
+                                <Label htmlFor="out-of-stock">Agotado</Label>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  id="stock-all"
+                                  checked={filters.stockStatus === "all"}
+                                  onCheckedChange={() =>
+                                    setFilters(prev => ({ ...prev, stockStatus: "all" }))
+                                  }
+                                />
+                                <Label htmlFor="stock-all">Todos</Label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Destacados</Label>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  id="featured"
+                                  checked={filters.featured === "featured"}
+                                  onCheckedChange={() =>
+                                    setFilters(prev => ({ ...prev, featured: "featured" }))
+                                  }
+                                />
+                                <Label htmlFor="featured">Solo destacados</Label>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  id="not-featured"
+                                  checked={filters.featured === "notFeatured"}
+                                  onCheckedChange={() =>
+                                    setFilters(prev => ({ ...prev, featured: "notFeatured" }))
+                                  }
+                                />
+                                <Label htmlFor="not-featured">No destacados</Label>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  id="all-featured"
+                                  checked={filters.featured === "all"}
+                                  onCheckedChange={() =>
+                                    setFilters(prev => ({ ...prev, featured: "all" }))
+                                  }
+                                />
+                                <Label htmlFor="all-featured">Todos</Label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </SheetContent>
+            </Sheet>
+          </div>
         </div>
+
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map(product =>
-            user?.role === "admin" ? (
+            isAdmin ? (
               <ProductAdminCard
                 key={product.IDProducto}
                 product={product}
@@ -163,11 +286,12 @@ export default function ProductsPage() {
             ) : (
               <Card key={product.IDProducto}>
                 <div className="relative h-48 w-full">
-                  <Image
-                    src={product.Imagen || "/placeholder.svg"}
-                    alt={product.Nombre}
-                    fill
-                    className="object-cover"
+                  <Image 
+                    src={product.Imagen ? BASE_URL + product.Imagen : "/placeholder.png"} 
+                    alt={product.Nombre} 
+                    fill 
+                    className="object-cover rounded-t-md"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   {product.Destacado && (
                     <Badge className="absolute top-2 left-2" variant="default">Destacado</Badge>
@@ -192,10 +316,10 @@ export default function ProductsPage() {
                           id: product.IDProducto,
                           name: product.Nombre,
                           price: product.Precio,
-                          image: product.Imagen || "/placeholder.svg"
+                          image: BASE_URL + product.Imagen
                         },
-                        1,              // cantidad por defecto
-                        product.Stock   // máximo permitido
+                        1,
+                        product.Stock
                       )
                     }
                   >

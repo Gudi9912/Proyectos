@@ -1,15 +1,19 @@
 const express = require("express")
 const cors = require("cors")
+const path = require("path")
+require("dotenv").config()
 
 const app = express()
 
-require("./src/config/Emantecate_init.js") //Se creara la base de datos si esta no existe
+require("./src/config/Emantecate_init.js") 
 
 app.use(express.json())
 app.use(cors())
-
+app.use("/uploads", express.static(path.join(__dirname,"uploads")))
 const emantecateRouterProductos = require("./src/routes/productos.js")
 const emantecateRouterRellenos = require("./src/routes/rellenos.js")
+const emantecateRouterLogin = require("./src/routes/login.js")
+app.use("/", emantecateRouterLogin)
 app.use(emantecateRouterProductos)
 app.use(emantecateRouterRellenos)
 

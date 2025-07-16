@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../modules/Emantecate_init.js")
 const { Op } = require("sequelize");
+const authenticateToken = require("../middleware/auth.js")
+const upload = require("../middleware/upload.js")
 
 router.use(express.json());
 
@@ -54,78 +56,22 @@ router.get("/api/Emantecate/:id", async (req, res) => {
     }
 });
 
-//Consultar productos destacados
-router.get("/api/Emantecate/destacados", async (req, res) => {
-    try {
-        const productos = await db.Productos.findAll({
-            where: {
-                Destacado: true,
-                Activo: true
-            },
-            include: {
-                model: db.Rellenos,
-                as: 'Relleno', 
-                attributes: ["Nombre"]
-            },
-            order: [["Stock", "ASC"]],
-            attributes: ['IDProducto', 'Nombre', 'Descripcion', 'Precio', 'Imagen', 'Stock', 'Activo', 'Destacado', 'IDRelleno']
-        });
-
-        if (!productos || productos.length === 0) {
-            return res.status(404).json({ error: "No se encontraron productos destacados" });
-        }
-
-        return res.status(200).json(productos);
-        
-    } catch (err) {
-        console.error("Error al obtener los Productos:", err.message);
-        return res.status(500).json({ error: "Error al obtener los Productos" });
-    }
-});
-
-//Consultar productos con stock
-router.get("/api/Emantecate/constock", async (req, res) => {
-    try {
-        const productos = await db.Productos.findAll({
-            where : {
-                Stock: { [Op.gt] : 0 },
-                Activo: true
-                },
-            include: {
-                model: db.Rellenos,
-                as: 'Relleno', 
-                attributes: ["Nombre"]
-            },
-            order: [["Stock", "ASC"]],
-            attributes: ['IDProducto', 'Nombre', 'Descripcion', 'Precio', 'Imagen', 'Stock', 'Activo', 'Destacado', 'IDRelleno']
-        });
-
-        if (!productos || productos.length === 0) {
-            return res.status(404).json({ error: "No se encontraron productos con" });
-        }
-
-        return res.status(200).json(productos);
-        
-    } catch (err) {
-        console.error("Error al obtener los Productos:", err.message);
-        return res.status(500).json({ error: "Error al obtener los Productos" });
-    }
-});
-
 //Agregar un producto
-router.post("/api/Emantecate", async (req, res) => {
+router.post("/api/Emantecate", authenticateToken, upload.single("Imagen"), async (req, res) => {
     try {
-        const { Nombre, Descripcion, Precio, Imagen, Stock, Activo, Destacado, IDRelleno } = req.body; // <- Campos añadidos
+        const { Nombre, Descripcion, Precio, Stock, Activo, Destacado, IDRelleno } = req.body;
     
-        if (!Nombre || !Descripcion || !Precio || !Imagen) {
+        if (!Nombre || !Descripcion || !Precio ) {
             return res.status(400).json({ error: "Faltan datos requeridos" });
         } 
         
+        const imagenNombre = req.file ? req.file.filename : null;
+
         const nuevoProducto = await db.Productos.create({
             Nombre,
             Descripcion,
             Precio,
-            Imagen,
+            Imagen: imagenNombre,
             Stock: Stock ? parseInt(Stock) : 0,
             Activo: Activo !== undefined ? Activo : true,
             Destacado: Destacado !== undefined ? Destacado : false, 
@@ -141,7 +87,7 @@ router.post("/api/Emantecate", async (req, res) => {
 });
 
 //Actualizar un producto 
-router.put("/api/Emantecate/:id", async (req, res) => {
+router.put("/api/Emantecate/:id", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         const { Nombre, Descripcion, Precio, Imagen, Stock, Activo, Destacado, IDRelleno } = req.body;
@@ -177,7 +123,7 @@ router.put("/api/Emantecate/:id", async (req, res) => {
 });
 
 // Baja lógica 
-router.patch("/api/Emantecate/:id/baja", async (req, res) => {
+router.patch("/api/Emantecate/:id/baja", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
     
@@ -200,7 +146,7 @@ router.patch("/api/Emantecate/:id/baja", async (req, res) => {
 });
 
 // Reactivar un producto
-router.patch("/api/Emantecate/:id/activar", async (req, res) => {
+router.patch("/api/Emantecate/:id/activar", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
     
@@ -223,7 +169,7 @@ router.patch("/api/Emantecate/:id/activar", async (req, res) => {
 });
 
 // Eliminación física
-router.delete("/api/Emantecate/:id", async (req, res) => {
+router.delete("/api/Emantecate/:id", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
     

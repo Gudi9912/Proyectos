@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../modules/Emantecate_init.js")
+const db = require("../modules/Emantecate_init")
 const { Op } = require("sequelize");
 
 router.use(express.json());

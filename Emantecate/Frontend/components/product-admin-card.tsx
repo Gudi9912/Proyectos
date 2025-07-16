@@ -31,6 +31,8 @@ interface ProductAdminCardProps {
   onUpdateSuccess: () => void
 }
 
+const BASE_URL = "http://localhost:3001/uploads/"
+
 export default function ProductAdminCard({ 
   product, 
   onUpdateSuccess
@@ -137,12 +139,12 @@ export default function ProductAdminCard({
         </div>
       )}
 
-      <div className="relative h-48 w-full">
+      <div className="relative aspect-[4/3] w-full">
         <Image 
-          src={product.Imagen || "/placeholder.svg"} 
+          src={product.Imagen ? BASE_URL + product.Imagen : "/placeholder.png"} 
           alt={product.Nombre} 
           fill 
-          className="object-cover"
+          className="object-cover rounded-t-md"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <Badge 

@@ -12,6 +12,8 @@ import { Separator } from "@/components/ui/separator"
 import MobileNav from "@/components/mobile-nav"
 import { useCart } from "@/contexts/cart-context"
 
+const BASE_URL = "http://localhost:3001/uploads/"
+
 export default function ProductDetailPage() {
   const { id } = useParams()
   const [product, setProduct] = useState<Product | null>(null)
@@ -55,7 +57,7 @@ export default function ProductDetailPage() {
         id: product.IDProducto,
         name: product.Nombre,
         price: product.Precio,
-        image: product.Imagen || "/placeholder.svg"
+        image: BASE_URL + product.Imagen || "/placeholder.svg"
       },
       quantity,
       product.Stock
@@ -85,7 +87,7 @@ export default function ProductDetailPage() {
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/placeholder.svg" alt="Panadería Logo" width={40} height={40} className="rounded-full" />
-            <span className="font-bold text-xl hidden sm:inline-block">Dulce Pan</span>
+            <span className="font-bold text-xl hidden sm:inline-block">Emantecate</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/cart" className="relative">
@@ -110,7 +112,7 @@ export default function ProductDetailPage() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="relative h-[300px] sm:h-[400px] md:h-[500px] w-full rounded-lg overflow-hidden">
             <Image
-              src={product.Imagen || "/placeholder.svg"}
+              src={product.Imagen ? BASE_URL + product.Imagen : "/placeholder.svg"}
               alt={product.Nombre}
               fill
               className="object-cover"

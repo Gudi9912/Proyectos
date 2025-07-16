@@ -57,8 +57,8 @@ export default function CartPage() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/placeholder.svg?height=40&width=40" alt="Panadería Logo" width={40} height={40} className="rounded-full" />
-            <span className="font-bold text-xl hidden sm:inline-block">Dulce Pan</span>
+            <Image src="/logo.jfif" alt="Panadería Logo" width={40} height={40} className="rounded-full" />
+            <span className="font-bold text-xl hidden sm:inline-block">Emantecate</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/cart" className="relative">
@@ -92,7 +92,8 @@ export default function CartPage() {
                   {cartItems.map((item) => (
                     <div key={item.id} className="p-4 flex flex-col sm:flex-row gap-4">
                       <div className="relative h-20 w-20 shrink-0 rounded overflow-hidden">
-                        <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
+                        
+                        <Image src={item.image ? item.image : "/placeholder.png"} alt={item.name} fill className="object-cover" />
                       </div>
                       <div className="flex-1">
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">

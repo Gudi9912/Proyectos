@@ -1,105 +1,73 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useEffect, useState, ReactNode } from "react"
 
-// Tipos para el usuario y contexto de autenticación
-interface User {
-  id: string
-  email: string
-  name: string
-  role: "admin" | "customer"
-}
-
-interface AuthContextType {
-  user: User | null
+type AuthContextType = {
+  isAuthenticated: boolean
+  isAdmin: boolean
+  token: string | null
   login: (email: string, password: string) => Promise<boolean>
   logout: () => void
-  isLoading: boolean
 }
 
-// Crear el contexto de autenticación
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Usuarios de ejemplo (en una aplicación real, esto vendría de una base de datos)
-const DEMO_USERS = [
-  {
-    id: "1",
-    email: "admin@dulcepan.com",
-    password: "admin123",
-    name: "Administrador",
-    role: "admin" as const,
-  },
-  {
-    id: "2",
-    email: "cliente@email.com",
-    password: "cliente123",
-    name: "Cliente Demo",
-    role: "customer" as const,
-  },
-]
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [token, setToken] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
 
-  // Verificar si hay una sesión guardada al cargar la aplicación
   useEffect(() => {
-    const savedUser = localStorage.getItem("dulcepan_user")
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser))
-      } catch (error) {
-        localStorage.removeItem("dulcepan_user")
-      }
+    const stored = localStorage.getItem("authToken")
+    if (stored) {
+      setToken(stored)
+      setIsAdmin(true) // simple, ya que sólo existe un admin
     }
-    setIsLoading(false)
   }, [])
 
-  /**
-   * Función para iniciar sesión
-   * Simula una autenticación con usuarios de ejemplo
-   */
   const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true)
+    try {
+      const res = await fetch("http://localhost:3001/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      })
 
-    // Simular delay de red
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+      if (!res.ok) return false
 
-    const foundUser = DEMO_USERS.find((u) => u.email === email && u.password === password)
+      const data = await res.json()
+      setToken(data.token)
+      setIsAdmin(true)
+      localStorage.setItem("authToken", data.token)
 
-    if (foundUser) {
-      const userData = {
-        id: foundUser.id,
-        email: foundUser.email,
-        name: foundUser.name,
-        role: foundUser.role,
-      }
-      setUser(userData)
-      localStorage.setItem("dulcepan_user", JSON.stringify(userData))
-      setIsLoading(false)
       return true
+    } catch {
+      return false
     }
-
-    setIsLoading(false)
-    return false
   }
 
-  /**
-   * Función para cerrar sesión
-   */
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem("dulcepan_user")
+    localStorage.removeItem("authToken")
+    setToken(null)
+    setIsAdmin(false)
   }
 
-  return <AuthContext.Provider value={{ user, login, logout, isLoading }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated: !!token,
+        isAdmin,
+        token,
+        login,
+        logout
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
-// Hook personalizado para usar el contexto de autenticación
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
+  if (!context) throw new Error("useAuth debe usarse dentro de AuthProvider")
   return context
 }
