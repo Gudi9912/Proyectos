@@ -5,7 +5,7 @@ const app = express();
 const EmantecateRoutes = require('./Routes/Emantecate.routes');
 
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
 }));
