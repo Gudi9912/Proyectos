@@ -8,7 +8,7 @@
         "multer": "2.0.1",
         "sequelize": "^6.37.5",
         "sqlite3": "^5.1.7",
-        "vercel": "^44.4.3"
+        "vercel": "^44.4.3",
     },
     "devDependencies": {
         "jest": "^29.7.0",
